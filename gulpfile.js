@@ -9,19 +9,20 @@ var gulp            = require('gulp'),
     reload          = browserSync.reload,
     rimraf          = require('rimraf'),
     pngquant        = require('imagemin-pngquant'),
+    rigger          = require('gulp-rigger'),
     pug             = require('gulp-pug');
 
 var path = {
-    build: { //Тут мы укажем куда складывать готовые после сборки файлы
+    build: { // Пути готовой сборки
         html:   'build/',
         js:     'build/js/',
         css:    'build/css/',
         img:    'build/img/',
         fonts:  'build/fonts/'
     },
-    src: { //Пути откуда брать исходники
-        pug: 'src/**/*.pug', 
-        js: 'src/js/**/app.js',//В стилях и скриптах нам понадобятся только main файлы
+    src: { // Пути исходников
+        pug: 'src/**/index.pug', 
+        js: 'src/js/**/app.js', // В стилях и скриптах нам понадобятся только main файлы
         sass: 'src/scss/**/style.scss',
         allsass: 'src/scss/**/*.scss',
         img: 'src/img/**/*.*', //Синтаксис img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
@@ -40,9 +41,12 @@ var path = {
 // Pug build
 gulp.task('pug', function() {
     return gulp.src(path.src.pug)
-        .pipe(pug())
+        .pipe(rigger())
+        .pipe(pug({
+            pretty: true,
+        }))
         .pipe(gulp.dest(path.build.html))
-        .pipe(reload({stream: true}))
+        .pipe(reload({stream: true}));
 });
 
 // JS_BUILD
