@@ -10,7 +10,8 @@ var gulp            = require('gulp'),
     rimraf          = require('rimraf'),
     pngquant        = require('imagemin-pngquant'),
     rigger          = require('gulp-rigger'),
-    pug             = require('gulp-pug');
+    pug             = require('gulp-pug'),
+    babel = require('gulp-babel');
 
 var path = {
     build: { // Пути готовой сборки
@@ -52,6 +53,9 @@ gulp.task('pug', function() {
 // JS_BUILD
 gulp.task('js:build', function () {
     gulp.src(path.src.js) //Найдем наш main файл
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(sourcemaps.write()) //Пропишем карты
         .pipe(gulp.dest(path.build.js)) //Выплюнем готовый файл в build
