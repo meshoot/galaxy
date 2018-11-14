@@ -11,7 +11,8 @@ var gulp            = require('gulp'),
     pngquant        = require('imagemin-pngquant'),
     rigger          = require('gulp-rigger'),
     pug             = require('gulp-pug'),
-    babel = require('gulp-babel');
+    babel           = require('gulp-babel'),
+    plumber         = require('gulp-plumber');
 
 var path = {
     build: { // Пути готовой сборки
@@ -42,6 +43,7 @@ var path = {
 // Pug build
 gulp.task('pug', function() {
     return gulp.src(path.src.pug)
+        .pipe(plumber())
         .pipe(rigger())
         .pipe(pug({
             pretty: true,
@@ -53,6 +55,7 @@ gulp.task('pug', function() {
 // JS_BUILD
 gulp.task('js:build', function () {
     gulp.src(path.src.js) //Найдем наш main файл
+        .pipe(plumber())
         .pipe(babel({
             presets: ['@babel/env']
         }))
@@ -78,6 +81,7 @@ gulp.task('sass:build', function() {
         'bb >= 10'
     ];
     gulp.src(path.src.sass)
+        .pipe(plumber())
         .pipe(sourcemaps.init()) //Инициализируем sourcemap
         .pipe(sass().on('error', sass.logError)) // Using gulp-sass
         .pipe(autoprefixer({
@@ -92,6 +96,7 @@ gulp.task('sass:build', function() {
 // IMAGE-BUILD
 gulp.task('images:build', function () {
     gulp.src(path.src.img) //Выберем наши картинки
+        .pipe(plumber())
         .pipe(imagemin({ //Сожмем их
             progressive: true,
             pngquant: true,
@@ -106,6 +111,7 @@ gulp.task('images:build', function () {
 // FONTS-BUILD
 gulp.task('fonts:build', function() {
     gulp.src(path.src.fonts)
+        .pipe(plumber())
         .pipe(gulp.dest(path.build.fonts))
 });
 
