@@ -24,26 +24,38 @@ let cy = cytoscape({
                 'border-color': '#ffffff',
             }
         },
+        
+        { data: { id: 'INDUSTRYLabel', parent: 'INDUSTRY', label: 'INDUSTRY' },
+            position: { x: 60,  y: 54 }, },
         {
             data: { id: 'INDUSTRY', label: '123' },
             position: { x: 60,  y: 54 },
             classes: 'center-center'
         },
+        { data: { id: 'SUSTAINABILITYLabel', parent: 'SUSTAINABILITY', label: 'SUSTAINABILITY' },
+            position: { x: 180,  y: 80 }, },
         {
             data: { id: 'SUSTAINABILITY', label: '123' },
             position: { x: 180, y: 80 },
             classes: 'center-center'
         },
+        { data: { id: 'STATUSLabel', parent: 'STATUS', label: 'SUSTAINABILITY' },
+            position: { x: 46.42,  y: 212.14 }, 
+            classes: 'label'},
         {
             data: { id: 'STATUS', label: '123',},
             position: { x: 46.42, y: 212.14 },
             classes: 'center-center'
         },
+        { data: { id: 'SUPPLIERLabel', parent: 'SUPPLIER', label: 'SUPPLIER' },
+            position: { x: 142.07,  y: 249.42 }, },
         {
             data: { id: 'SUPPLIER', label: '123' },
             position: { x: 142.07, y: 249.42 },
             classes: 'center-center'
         },
+        { data: { id: 'COUNTRYLabel', parent: 'COUNTRY', label: 'COUNTRY' },
+            position: { x: 207.42,  y: 121.74 }, },
         {
             data: { id: 'COUNTRY', label: '123' },
             position: { x: 207.42, y: 171.74 },
@@ -73,7 +85,8 @@ let cy = cytoscape({
                 'border-width': 4,
                 'border-color': '#ffffff',
                 'background-color': '#A6A6A6',
-                'label': 'data(label)'
+                'label': 'data(label)',
+                'source-label': 'data(id)'
             }
         },
 
@@ -94,7 +107,11 @@ let cy = cytoscape({
                 "text-valign": "center",
                 "text-halign": "center"
             }
-        }
+        },
+        {selector: '.label',
+            style: {
+                
+        }}
     ],
     layout: {
         name: 'preset',
