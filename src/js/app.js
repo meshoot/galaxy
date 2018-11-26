@@ -1,20 +1,8 @@
-let data = {
-    'nodes': [
-        { name: 'INDUSTRY', value: 0, x: 54, y: 54 },
-        { name: 'SUSTAINABILITY', value: 100, x: 180, y: 73.13 },
-        { name: 'STATUS', value: 151, x: 46.42, y: 212.14 },
-        { name: 'SUPPLIER', value: 0, x: 142.07, y: 249.42 },
-        { name: 'COUNTRY', value: 93, x: 207.42, y: 171.74 }
-    ]
-};
-
-
-
 let cy = cytoscape({
     container: document.getElementById('cy'), // container to render in
     elements: [ // list of graph elements to start with
         {
-            data: { id: '1', value: 10 },
+            data: { id: '0' },
             position: { x: 125, y: 140 },
             style: {
                 'background-color': '#228AA2',
@@ -22,71 +10,114 @@ let cy = cytoscape({
                 'height': 58,
                 'border-width': 4,
                 'border-color': '#ffffff',
-            }
+            },
+            locked: true
         },
-        
-        { data: { id: 'INDUSTRYLabel', parent: 'INDUSTRY', label: 'INDUSTRY' },
-            position: { x: 60,  y: 54 }, },
+
         {
-            data: { id: 'INDUSTRY', label: '123' },
-            position: { x: 60,  y: 54 },
-            classes: 'center-center'
+            data: { id: '1.1', parent: '1', label: '12' },
+            position: { x: 60, y: 54 },
+            classes: 'child',
         },
-        { data: { id: 'SUSTAINABILITYLabel', parent: 'SUSTAINABILITY', label: 'SUSTAINABILITY' },
-            position: { x: 180,  y: 80 }, },
         {
-            data: { id: 'SUSTAINABILITY', label: '123' },
+            data: { id: '1', label: 'INDUSTRY' },
+            position: { x: 60, y: 54 },
+            classes: 'parent',
+        },
+        {
+            data: { id: '2.1', parent: '2', label: '100' },
             position: { x: 180, y: 80 },
-            classes: 'center-center'
+            classes: 'child',
         },
-        { data: { id: 'STATUSLabel', parent: 'STATUS', label: 'SUSTAINABILITY' },
-            position: { x: 46.42,  y: 212.14 }, 
-            classes: 'label'},
         {
-            data: { id: 'STATUS', label: '123',},
+            data: { id: '2', label: 'SUSTAINABILITY' },
+            position: { x: 180, y: 80 },
+            classes: 'parent'
+        },
+        {
+            data: { id: '3.1', parent: '3', label: '151' },
             position: { x: 46.42, y: 212.14 },
-            classes: 'center-center'
+            classes: 'child',
         },
-        { data: { id: 'SUPPLIERLabel', parent: 'SUPPLIER', label: 'SUPPLIER' },
-            position: { x: 142.07,  y: 249.42 }, },
         {
-            data: { id: 'SUPPLIER', label: '123' },
+            data: { id: '3', label: 'SUSTAINABILITY' },
+            position: { x: 46.42, y: 212.14 },
+            classes: 'parent'
+        },
+        {
+            data: { id: '4.1', parent: '4', label: '93' },
             position: { x: 142.07, y: 249.42 },
-            classes: 'center-center'
+            classes: 'child',
         },
-        { data: { id: 'COUNTRYLabel', parent: 'COUNTRY', label: 'COUNTRY' },
-            position: { x: 207.42,  y: 121.74 }, },
         {
-            data: { id: 'COUNTRY', label: '123' },
+            data: { id: '4', label: 'SUPPLIER' },
+            position: { x: 142.07, y: 249.42 },
+            classes: 'parent'
+        },
+        {
+            data: { id: '5.1', parent: '5', label: '154' },
+            position: { x: 207.42, y: 121.74 },
+            classes: 'child',
+        },
+        {
+            data: { id: '5', label: 'COUNTRY' },
             position: { x: 207.42, y: 171.74 },
-            classes: 'center-center'
+            classes: 'parent'
         },
         {
-            data: { id: 'ab', source: '1', target: 'INDUSTRY' }
+            data: { id: 'ab', source: '1', target: '0' }
         },
         { // edge ab
-            data: { id: 'cd', source: '1', target: 'SUSTAINABILITY' }
+            data: { id: 'cd', source: '2', target: '0' }
         },
         { // edge ab
-            data: { id: 'de', source: '1', target: 'STATUS' }
+            data: { id: 'de', source: '3', target: '0' }
         },
         { // edge ab
-            data: { id: 'fg', source: '1', target: 'SUPPLIER' }
+            data: { id: 'fg', source: '4', target: '0' }
         },
         { // edge ab
-            data: { id: 'hi', source: '1', target: 'COUNTRY' }
+            data: { id: 'hi', source: '5', target: '0' }
         }
     ],
     style: [ // the stylesheet for the graph
         {
-            selector: 'node',
+            selector: '.child',
             style: {
-                'width': 30,
-                'border-width': 4,
+                'width': function (ele) {
+                    let w = parseFloat(ele.data().label);
+                    let width = calcWidth(calcPercent(255, w));
+
+                    if (width <= 27) {
+                        return 27
+                    } else {
+                        return width
+                    }
+                },
+                'height': function (ele) {
+                   return ele.style().width;
+                },
+                'border-width': 2,
                 'border-color': '#ffffff',
-                'background-color': '#A6A6A6',
+                'font-size': '13px',
+                'color': '#FFFFFF',
                 'label': 'data(label)',
-                'source-label': 'data(id)'
+                'text-halign': 'center',
+                'text-valign': 'center',
+                'background-color': function(ele) {
+                    let value = ele.data().label;
+                    let temp = calcPercent(255, value);
+
+                    return getColorForPercentage(temp)
+                }
+            }
+        },
+        {
+            selector: '.parent',
+            style: {
+                'label': 'data(label)',
+                'background-opacity': 0,
+                'border-width': 0,
             }
         },
 
@@ -96,29 +127,17 @@ let cy = cytoscape({
                 'width': 1,
                 'line-color': '#D4D4D4',
                 'target-arrow-color': '#ccc',
-                'target-arrow-shape': 'triangle'
+                'target-arrow-shape': 'triangle',
+                'curve-style': 'haystack'
             }
-        },
-        {
-            "selector": ".center-center",
-            "style": {
-                'font-size': '13px',
-                'color': '#ffffff',
-                "text-valign": "center",
-                "text-halign": "center"
-            }
-        },
-        {selector: '.label',
-            style: {
-                
-        }}
+        }
     ],
     layout: {
         name: 'preset',
         padding: 10,
         avoidOverlap: true
     },
-    autolock: true,
+    autolock: false,
     zoomingEnabled: false,
     panningEnabled: false,
     boxSelectionEnabled: false,
@@ -132,55 +151,33 @@ function calcWidth(data) {
     return 58 / 100 * data;
 }
 
-function addTitle(nodeId, circleText) {
-    let parentNode = cy.$('#' + nodeId);
-    if (parentNode.data('isCircle') || parentNode.data('circleId'))
-        return;
-    parentNode.lock();
-    let px = parentNode.position('x') + 10;
-    let py = parentNode.position('y') - 10;
-    let circleId = (cy.nodes().size() + 1).toString();
-    parentNode.data('circleId', circleId);
-    cy.add({
-        group: 'nodes',
-        data: { weight: 75, id: circleId, name: circleText, isCircle: true },
-        position: { x: px, y: py },
-        locked: true
-    }).css({
-        'background-opacity': 0,
-        'border-width': 0
-    }).unselectify();
+function getColorForPercentage(pct) {
+    var percentColors = [
+        { pct: 0, color: { r: 0xfb, g: 0x50, b: 0x15 } },
+        { pct: 50, color: { r: 0xf7, g: 0xa4, b: 0x0c } },
+        { pct: 100, color: { r: 0x4a, g: 0xbf, b: 0x40 } }];
+
+    for (var i = 1; i < percentColors.length - 1; i++) {
+        if (pct < percentColors[i].pct) {
+            break;
+        }
+    }
+
+    var lower = percentColors[i - 1];
+    var upper = percentColors[i];
+    var range = upper.pct - lower.pct;
+    var rangePct = (pct - lower.pct) / range;
+    var pctLower = 1 - rangePct;
+    var pctUpper = rangePct;
+    var color = {
+        r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+        g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+        b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+    };
+
+    return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+    // or output as hex if preferred
 }
-
-
-addTitle('INDUSTRY', 'INDUSTRY');
-addTitle('SUSTAINABILITY', 'SUSTAINABILITY');
-addTitle('STATUS', 'STATUS');
-addTitle('COUNTRY', 'COUNTRY');
-addTitle('SUPPLIER', 'SUPPLIER');
-
-
-
-
-
-
-
-
-// function geneneratePostion(i) {
-//     let pos = {};
-//     let parrentR = 29;
-//     let angle = i + 1 * Math.PI;
-//     let width = galaxy.attr('width') - parrentR * 2;
-//     let height = galaxy.attr('height') - parrentR * 2;
-
-//     pos.x = (parrentR + width / 2 + height / 2 * Math.sin(-angle));
-//     pos.y = (parrentR + height / 2 + width / 2 * Math.cos(-angle));
-
-//     positions.push(pos);
-
-//     return pos;
-// }
-
 
 
 
