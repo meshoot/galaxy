@@ -127,8 +127,6 @@ let cy = cytoscape({
                 'width': 1,
                 'line-color': '#D4D4D4',
                 'target-arrow-color': '#ccc',
-                'target-arrow-shape': 'triangle',
-                'curve-style': 'haystack'
             }
         }
     ],
